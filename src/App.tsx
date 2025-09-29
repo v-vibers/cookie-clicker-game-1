@@ -10,6 +10,14 @@ interface Upgrade {
   description: string
 }
 
+interface Achievement {
+  id: string
+  name: string
+  milestone: number
+  completed: boolean
+  clickBonus: number
+}
+
 function App() {
   const [cookies, setCookies] = useState(0)
   const [totalCookies, setTotalCookies] = useState(0)
@@ -32,6 +40,15 @@ function App() {
     { id: 'factory', name: 'Cookie Factory', baseCost: 130000, cps: 260, count: 0, description: 'Produces large quantities of cookies' },
     { id: 'bank', name: 'Cookie Bank', baseCost: 1400000, cps: 1400, count: 0, description: 'Generates cookies from interest' },
   ])
+  const [achievements, setAchievements] = useState<Achievement[]>([
+    { id: 'ach1', name: 'Cookie Novice', milestone: 10, completed: false, clickBonus: 0.5 },
+    { id: 'ach2', name: 'Cookie Baker', milestone: 100, completed: false, clickBonus: 0.5 },
+    { id: 'ach3', name: 'Cookie Expert', milestone: 1000, completed: false, clickBonus: 0.5 },
+    { id: 'ach4', name: 'Cookie Master', milestone: 10000, completed: false, clickBonus: 0.5 },
+    { id: 'ach5', name: 'Cookie Legend', milestone: 100000, completed: false, clickBonus: 0.5 },
+    { id: 'ach6', name: 'Cookie Deity', milestone: 1000000, completed: false, clickBonus: 0.5 },
+    { id: 'ach7', name: 'Cookie Overlord', milestone: 10000000, completed: false, clickBonus: 0.5 },
+  ])
 
   // Calculate XP needed for next level
   const getXpNeededForLevel = (targetLevel: number) => {
@@ -52,6 +69,29 @@ function App() {
       setLevel(prev => prev + 1)
     }
   }, [xp, level])
+
+  // Check for achievement completion
+  useEffect(() => {
+    setAchievements(prevAchievements =>
+      prevAchievements.map(achievement =>
+        !achievement.completed && totalCookies >= achievement.milestone
+          ? { ...achievement, completed: true }
+          : achievement
+      )
+    )
+  }, [totalCookies])
+
+  // Calculate click bonus from achievements
+  const getClickBonus = () => {
+    return achievements
+      .filter(a => a.completed)
+      .reduce((sum, a) => sum + a.clickBonus, 1)
+  }
+
+  // Get current active achievement (first incomplete one)
+  const getCurrentAchievement = () => {
+    return achievements.find(a => !a.completed)
+  }
 
   // Apply dark mode class to document
   useEffect(() => {
@@ -79,8 +119,9 @@ function App() {
   }, [cps])
 
   const handleCookieClick = () => {
-    setCookies(cookies + 1)
-    setTotalCookies(totalCookies + 1)
+    const clickValue = getClickBonus()
+    setCookies(cookies + clickValue)
+    setTotalCookies(totalCookies + clickValue)
   }
 
   const calculateUpgradeCost = (upgrade: Upgrade) => {
@@ -193,6 +234,47 @@ function App() {
               </button>
             )
           })}
+        </div>
+      </div>
+
+      <div className="achievements-panel">
+        <h2>Achievements</h2>
+        <div className="achievements-list">
+          {getCurrentAchievement() && (
+            <div className="achievement-card active">
+              <div className="achievement-icon">🏆</div>
+              <div className="achievement-content">
+                <div className="achievement-name">{getCurrentAchievement()!.name}</div>
+                <div className="achievement-progress">
+                  <div className="achievement-progress-text">
+                    {formatNumber(totalCookies)} / {formatNumber(getCurrentAchievement()!.milestone)}
+                  </div>
+                  <div className="achievement-progress-bar">
+                    <div
+                      className="achievement-progress-fill"
+                      style={{
+                        width: `${Math.min(
+                          (totalCookies / getCurrentAchievement()!.milestone) * 100,
+                          100
+                        )}%`,
+                      }}
+                    />
+                  </div>
+                </div>
+                <div className="achievement-reward">+0.5 per click</div>
+              </div>
+            </div>
+          )}
+          <div className="achievements-stats">
+            <div className="achievement-stat">
+              <span className="stat-label">Completed:</span>
+              <span className="stat-value">{achievements.filter(a => a.completed).length}/{achievements.length}</span>
+            </div>
+            <div className="achievement-stat">
+              <span className="stat-label">Click Power:</span>
+              <span className="stat-value">{getClickBonus().toFixed(1)}x</span>
+            </div>
+          </div>
         </div>
       </div>
     </div>
