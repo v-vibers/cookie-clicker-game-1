@@ -24,11 +24,12 @@ function App() {
   const [cps, setCps] = useState(0)
   const [level, setLevel] = useState(1)
   const [xp, setXp] = useState(0)
-  const [darkMode, setDarkMode] = useState(() => {
+  const [theme, setTheme] = useState<'light' | 'dark' | 'blue' | 'green' | 'purple'>(() => {
     // Check localStorage or system preference
-    const saved = localStorage.getItem('darkMode')
-    if (saved !== null) return saved === 'true'
-    return window.matchMedia('(prefers-color-scheme: dark)').matches
+    const saved = localStorage.getItem('theme')
+    if (saved !== null) return saved as 'light' | 'dark' | 'blue' | 'green' | 'purple'
+    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches
+    return prefersDark ? 'dark' : 'light'
   })
   const [upgrades, setUpgrades] = useState<Upgrade[]>([
     { id: 'cursor', name: 'Cursor', baseCost: 15, cps: 0.1, count: 0, description: 'Autoclicks once every 10 seconds' },
@@ -93,11 +94,18 @@ function App() {
     return achievements.find(a => !a.completed)
   }
 
-  // Apply dark mode class to document
+  // Apply theme class to document
   useEffect(() => {
-    document.documentElement.classList.toggle('dark-mode', darkMode)
-    localStorage.setItem('darkMode', String(darkMode))
-  }, [darkMode])
+    // Remove all theme classes
+    document.documentElement.classList.remove('light-mode', 'dark-mode', 'blue-theme', 'green-theme', 'purple-theme')
+    // Add current theme class
+    const themeClass = theme === 'light' ? 'light-mode' :
+                       theme === 'dark' ? 'dark-mode' :
+                       theme === 'blue' ? 'blue-theme' :
+                       theme === 'green' ? 'green-theme' : 'purple-theme'
+    document.documentElement.classList.add(themeClass)
+    localStorage.setItem('theme', theme)
+  }, [theme])
 
   // Calculate cookies per second with level multiplier
   useEffect(() => {
@@ -153,16 +161,32 @@ function App() {
     return Math.floor(num).toLocaleString()
   }
 
+  const themeNames = {
+    light: 'Light',
+    dark: 'Dark',
+    blue: 'Ocean Blue',
+    green: 'Matrix Green',
+    purple: 'Purple Night'
+  }
+
   return (
     <div className="game-container">
-      <button
-        className="dark-mode-toggle"
-        onClick={() => setDarkMode(!darkMode)}
-        aria-label={darkMode ? 'Switch to light mode' : 'Switch to dark mode'}
-        title={darkMode ? 'Switch to light mode' : 'Switch to dark mode'}
-      >
-        {darkMode ? '☀️' : '🌙'}
-      </button>
+      <div className="theme-selector">
+        <label htmlFor="theme-select" className="theme-label">Theme:</label>
+        <select
+          id="theme-select"
+          className="theme-select"
+          value={theme}
+          onChange={(e) => setTheme(e.target.value as typeof theme)}
+          aria-label="Select theme"
+        >
+          <option value="light">☀️ {themeNames.light}</option>
+          <option value="dark">🌙 {themeNames.dark}</option>
+          <option value="blue">🌊 {themeNames.blue}</option>
+          <option value="green">💚 {themeNames.green}</option>
+          <option value="purple">💜 {themeNames.purple}</option>
+        </select>
+      </div>
 
       <div className="left-panel">
         <div className="stats">
