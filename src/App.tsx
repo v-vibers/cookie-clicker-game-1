@@ -14,14 +14,28 @@ function App() {
   const [cookies, setCookies] = useState(0)
   const [totalCookies, setTotalCookies] = useState(0)
   const [cps, setCps] = useState(0)
+  const [darkMode, setDarkMode] = useState(() => {
+    // Check localStorage or system preference
+    const saved = localStorage.getItem('darkMode')
+    if (saved !== null) return saved === 'true'
+    return window.matchMedia('(prefers-color-scheme: dark)').matches
+  })
   const [upgrades, setUpgrades] = useState<Upgrade[]>([
     { id: 'cursor', name: 'Cursor', baseCost: 15, cps: 0.1, count: 0, description: 'Autoclicks once every 10 seconds' },
     { id: 'grandma', name: 'Grandma', baseCost: 100, cps: 1, count: 0, description: 'A nice grandma to bake more cookies' },
+    { id: 'oven', name: 'Cookie Oven', baseCost: 250, cps: 2, count: 0, description: 'Bakes cookies at a steady rate' },
+    { id: 'bakery', name: 'Cookie Bakery', baseCost: 500, cps: 4, count: 0, description: 'A small bakery producing fresh cookies' },
     { id: 'farm', name: 'Cookie Farm', baseCost: 1100, cps: 8, count: 0, description: 'Grows cookie plants from cookie seeds' },
     { id: 'mine', name: 'Cookie Mine', baseCost: 12000, cps: 47, count: 0, description: 'Mines out cookie dough and chocolate chips' },
     { id: 'factory', name: 'Cookie Factory', baseCost: 130000, cps: 260, count: 0, description: 'Produces large quantities of cookies' },
     { id: 'bank', name: 'Cookie Bank', baseCost: 1400000, cps: 1400, count: 0, description: 'Generates cookies from interest' },
   ])
+
+  // Apply dark mode class to document
+  useEffect(() => {
+    document.documentElement.classList.toggle('dark-mode', darkMode)
+    localStorage.setItem('darkMode', String(darkMode))
+  }, [darkMode])
 
   // Calculate cookies per second
   useEffect(() => {
@@ -73,6 +87,15 @@ function App() {
 
   return (
     <div className="game-container">
+      <button
+        className="dark-mode-toggle"
+        onClick={() => setDarkMode(!darkMode)}
+        aria-label={darkMode ? 'Switch to light mode' : 'Switch to dark mode'}
+        title={darkMode ? 'Switch to light mode' : 'Switch to dark mode'}
+      >
+        {darkMode ? '☀️' : '🌙'}
+      </button>
+
       <div className="left-panel">
         <div className="stats">
           <h1>🍪 Cookie Clicker</h1>
