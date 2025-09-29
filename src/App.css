@@ -1,42 +1,283 @@
-#root {
-  max-width: 1280px;
-  margin: 0 auto;
+.game-container {
+  display: flex;
+  gap: 2rem;
+  min-height: 100vh;
+  width: 100%;
   padding: 2rem;
+  box-sizing: border-box;
+}
+
+.left-panel {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2rem;
+  min-width: 300px;
+}
+
+.stats {
+  text-align: center;
+  width: 100%;
+}
+
+.stats h1 {
+  margin: 0 0 1rem 0;
+  font-size: 2.5rem;
+}
+
+.cookie-count {
+  margin: 1.5rem 0;
+}
+
+.count-number {
+  font-size: 3rem;
+  font-weight: bold;
+  color: #ffa500;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.count-label {
+  font-size: 1.2rem;
+  color: #888;
+  margin-top: 0.5rem;
+}
+
+.cps-display {
+  font-size: 1.1rem;
+  margin: 1rem 0;
+  color: #888;
+}
+
+.cps-value {
+  color: #4caf50;
+  font-weight: bold;
+}
+
+.total-cookies {
+  font-size: 0.9rem;
+  color: #666;
+  margin-top: 0.5rem;
+}
+
+.cookie-clicker {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+
+.cookie-button {
+  font-size: 8rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+  transition: transform 0.1s ease, filter 0.2s ease;
+  padding: 0;
+  line-height: 1;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.cookie-button:hover {
+  transform: scale(1.05);
+  filter: brightness(1.2);
+}
+
+.cookie-button:active {
+  transform: scale(0.95);
+}
+
+.cookie-button:focus-visible {
+  outline: 3px solid #646cff;
+  outline-offset: 10px;
+  border-radius: 50%;
+}
+
+.click-instruction {
+  font-size: 0.9rem;
+  color: #888;
+}
+
+.right-panel {
+  flex: 1;
+  max-width: 500px;
+  min-width: 300px;
+}
+
+.right-panel h2 {
+  margin: 0 0 1.5rem 0;
+  font-size: 1.8rem;
   text-align: center;
 }
 
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
+.upgrades-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  max-height: calc(100vh - 8rem);
+  overflow-y: auto;
+  padding-right: 0.5rem;
 }
 
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
+.upgrades-list::-webkit-scrollbar {
+  width: 8px;
+}
+
+.upgrades-list::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 4px;
+}
+
+.upgrades-list::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 4px;
+}
+
+.upgrades-list::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+.upgrade-card {
+  background: rgba(255, 255, 255, 0.05);
+  border: 2px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  padding: 1rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-align: left;
+  width: 100%;
+  font-family: inherit;
+  color: inherit;
+}
+
+.upgrade-card.affordable {
+  border-color: #4caf50;
+  background: rgba(76, 175, 80, 0.1);
+}
+
+.upgrade-card.affordable:hover {
+  background: rgba(76, 175, 80, 0.2);
+  transform: translateX(5px);
+  border-color: #66bb6a;
+}
+
+.upgrade-card.locked {
+  opacity: 0.5;
+  cursor: not-allowed;
+  border-color: rgba(255, 255, 255, 0.05);
+}
+
+.upgrade-card:focus-visible {
+  outline: 3px solid #646cff;
+  outline-offset: 2px;
+}
+
+.upgrade-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
+.upgrade-name {
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: #ffa500;
+}
+
+.upgrade-count {
+  background: rgba(255, 165, 0, 0.2);
+  border: 1px solid #ffa500;
+  border-radius: 12px;
+  padding: 0.25rem 0.75rem;
+  font-size: 0.9rem;
+  font-weight: bold;
+  min-width: 30px;
+  text-align: center;
+}
+
+.upgrade-description {
+  font-size: 0.85rem;
+  color: #aaa;
+  margin-bottom: 0.75rem;
+  line-height: 1.4;
+}
+
+.upgrade-stats {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.9rem;
+}
+
+.upgrade-cps {
+  color: #4caf50;
+  font-weight: bold;
+}
+
+.upgrade-cost {
+  color: #ffa500;
+  font-weight: bold;
+}
+
+@media (max-width: 768px) {
+  .game-container {
+    flex-direction: column;
+    padding: 1rem;
   }
-  to {
-    transform: rotate(360deg);
+
+  .left-panel,
+  .right-panel {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .stats h1 {
+    font-size: 2rem;
+  }
+
+  .count-number {
+    font-size: 2.5rem;
+  }
+
+  .cookie-button {
+    font-size: 6rem;
+  }
+
+  .upgrades-list {
+    max-height: 500px;
   }
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
+@media (prefers-color-scheme: light) {
+  .upgrade-card {
+    background: rgba(0, 0, 0, 0.03);
+    border-color: rgba(0, 0, 0, 0.1);
   }
-}
 
-.card {
-  padding: 2em;
-}
+  .upgrade-card.affordable {
+    background: rgba(76, 175, 80, 0.1);
+    border-color: #4caf50;
+  }
 
-.read-the-docs {
-  color: #888;
+  .upgrade-card.affordable:hover {
+    background: rgba(76, 175, 80, 0.15);
+  }
+
+  .upgrade-card.locked {
+    border-color: rgba(0, 0, 0, 0.05);
+  }
+
+  .upgrades-list::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.05);
+  }
+
+  .upgrades-list::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.2);
+  }
+
+  .upgrades-list::-webkit-scrollbar-thumb:hover {
+    background: rgba(0, 0, 0, 0.3);
+  }
 }
