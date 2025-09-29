@@ -5,6 +5,53 @@
   width: 100%;
   padding: 2rem;
   box-sizing: border-box;
+  position: relative;
+}
+
+.dark-mode-toggle {
+  position: fixed;
+  top: 1rem;
+  right: 1rem;
+  font-size: 1.5rem;
+  width: 3rem;
+  height: 3rem;
+  border-radius: 50%;
+  background: rgba(100, 108, 255, 0.1);
+  border: 2px solid rgba(100, 108, 255, 0.3);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.dark-mode-toggle:hover {
+  background: rgba(100, 108, 255, 0.2);
+  transform: rotate(20deg) scale(1.1);
+  border-color: rgba(100, 108, 255, 0.5);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.dark-mode-toggle:active {
+  transform: rotate(20deg) scale(0.95);
+}
+
+.dark-mode-toggle:focus-visible {
+  outline: 3px solid #646cff;
+  outline-offset: 2px;
+}
+
+.dark-mode .dark-mode-toggle {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.dark-mode .dark-mode-toggle:hover {
+  background: rgba(255, 255, 255, 0.2);
+  border-color: rgba(255, 255, 255, 0.4);
 }
 
 .left-panel {
@@ -39,14 +86,14 @@
 
 .count-label {
   font-size: 1.2rem;
-  color: #888;
+  color: var(--text-secondary, #888);
   margin-top: 0.5rem;
 }
 
 .cps-display {
   font-size: 1.1rem;
   margin: 1rem 0;
-  color: #888;
+  color: var(--text-secondary, #888);
 }
 
 .cps-value {
@@ -56,7 +103,7 @@
 
 .total-cookies {
   font-size: 0.9rem;
-  color: #666;
+  color: var(--text-secondary, #666);
   margin-top: 0.5rem;
 }
 
@@ -96,7 +143,7 @@
 
 .click-instruction {
   font-size: 0.9rem;
-  color: #888;
+  color: var(--text-secondary, #888);
 }
 
 .right-panel {
@@ -221,6 +268,37 @@
   font-weight: bold;
 }
 
+/* Light mode specific styles */
+:root:not(.dark-mode) .upgrade-card {
+  background: rgba(0, 0, 0, 0.03);
+  border-color: rgba(0, 0, 0, 0.1);
+}
+
+:root:not(.dark-mode) .upgrade-card.affordable {
+  background: rgba(76, 175, 80, 0.1);
+  border-color: #4caf50;
+}
+
+:root:not(.dark-mode) .upgrade-card.affordable:hover {
+  background: rgba(76, 175, 80, 0.15);
+}
+
+:root:not(.dark-mode) .upgrade-card.locked {
+  border-color: rgba(0, 0, 0, 0.05);
+}
+
+:root:not(.dark-mode) .upgrades-list::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.05);
+}
+
+:root:not(.dark-mode) .upgrades-list::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.2);
+}
+
+:root:not(.dark-mode) .upgrades-list::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 0, 0, 0.3);
+}
+
 @media (max-width: 768px) {
   .game-container {
     flex-direction: column;
@@ -248,36 +326,12 @@
   .upgrades-list {
     max-height: 500px;
   }
-}
 
-@media (prefers-color-scheme: light) {
-  .upgrade-card {
-    background: rgba(0, 0, 0, 0.03);
-    border-color: rgba(0, 0, 0, 0.1);
-  }
-
-  .upgrade-card.affordable {
-    background: rgba(76, 175, 80, 0.1);
-    border-color: #4caf50;
-  }
-
-  .upgrade-card.affordable:hover {
-    background: rgba(76, 175, 80, 0.15);
-  }
-
-  .upgrade-card.locked {
-    border-color: rgba(0, 0, 0, 0.05);
-  }
-
-  .upgrades-list::-webkit-scrollbar-track {
-    background: rgba(0, 0, 0, 0.05);
-  }
-
-  .upgrades-list::-webkit-scrollbar-thumb {
-    background: rgba(0, 0, 0, 0.2);
-  }
-
-  .upgrades-list::-webkit-scrollbar-thumb:hover {
-    background: rgba(0, 0, 0, 0.3);
+  .dark-mode-toggle {
+    top: 0.5rem;
+    right: 0.5rem;
+    width: 2.5rem;
+    height: 2.5rem;
+    font-size: 1.2rem;
   }
 }
