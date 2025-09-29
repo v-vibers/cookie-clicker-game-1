@@ -14,6 +14,8 @@ function App() {
   const [cookies, setCookies] = useState(0)
   const [totalCookies, setTotalCookies] = useState(0)
   const [cps, setCps] = useState(0)
+  const [level, setLevel] = useState(1)
+  const [xp, setXp] = useState(0)
   const [darkMode, setDarkMode] = useState(() => {
     // Check localStorage or system preference
     const saved = localStorage.getItem('darkMode')
@@ -31,17 +33,39 @@ function App() {
     { id: 'bank', name: 'Cookie Bank', baseCost: 1400000, cps: 1400, count: 0, description: 'Generates cookies from interest' },
   ])
 
+  // Calculate XP needed for next level
+  const getXpNeededForLevel = (targetLevel: number) => {
+    // Level 1->2 needs 5 XP, Level 2->3 needs 10 XP, Level 3->4 needs 15 XP, etc.
+    return (targetLevel - 1) * 5
+  }
+
+  // Get current level multiplier
+  const getLevelMultiplier = () => {
+    return level * 0.1
+  }
+
+  // Check for level up
+  useEffect(() => {
+    const xpNeededForNext = getXpNeededForLevel(level + 1)
+    if (xp >= xpNeededForNext) {
+      setXp(prev => prev - xpNeededForNext)
+      setLevel(prev => prev + 1)
+    }
+  }, [xp, level])
+
   // Apply dark mode class to document
   useEffect(() => {
     document.documentElement.classList.toggle('dark-mode', darkMode)
     localStorage.setItem('darkMode', String(darkMode))
   }, [darkMode])
 
-  // Calculate cookies per second
+  // Calculate cookies per second with level multiplier
   useEffect(() => {
-    const totalCps = upgrades.reduce((sum, upgrade) => sum + upgrade.cps * upgrade.count, 0)
+    const baseCps = upgrades.reduce((sum, upgrade) => sum + upgrade.cps * upgrade.count, 0)
+    const multiplier = getLevelMultiplier()
+    const totalCps = baseCps * (1 + multiplier)
     setCps(totalCps)
-  }, [upgrades])
+  }, [upgrades, level])
 
   // Auto-generate cookies based on CPS
   useEffect(() => {
@@ -72,6 +96,9 @@ function App() {
       if (cookies < cost) return prevUpgrades
 
       setCookies(cookies - cost)
+
+      // Add XP when buying an upgrade
+      setXp(prev => prev + 1)
 
       return prevUpgrades.map(u =>
         u.id === upgradeId ? { ...u, count: u.count + 1 } : u
@@ -108,6 +135,23 @@ function App() {
           </div>
           <div className="total-cookies">
             Total baked: {formatNumber(totalCookies)}
+          </div>
+
+          {/* XP Bar */}
+          <div className="xp-container">
+            <div className="xp-header">
+              <div className="xp-level">Level {level}</div>
+              <div className="xp-multiplier">+{(getLevelMultiplier() * 100).toFixed(0)}% CPS</div>
+            </div>
+            <div className="xp-bar-container">
+              <div
+                className="xp-bar-fill"
+                style={{ width: `${(xp / getXpNeededForLevel(level + 1)) * 100}%` }}
+              />
+              <div className="xp-bar-text">
+                {xp} / {getXpNeededForLevel(level + 1)} XP
+              </div>
+            </div>
           </div>
         </div>
 

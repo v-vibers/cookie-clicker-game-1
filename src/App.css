@@ -107,6 +107,76 @@
   margin-top: 0.5rem;
 }
 
+.xp-container {
+  margin-top: 1.5rem;
+  width: 100%;
+  max-width: 400px;
+  padding: 1rem;
+  background: rgba(100, 108, 255, 0.1);
+  border: 2px solid rgba(100, 108, 255, 0.3);
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.xp-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.75rem;
+}
+
+.xp-level {
+  font-size: 1.1rem;
+  font-weight: bold;
+  color: #646cff;
+}
+
+.xp-multiplier {
+  font-size: 0.9rem;
+  color: #4caf50;
+  font-weight: bold;
+}
+
+.xp-bar-container {
+  position: relative;
+  height: 30px;
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 15px;
+  overflow: hidden;
+  border: 2px solid rgba(100, 108, 255, 0.4);
+}
+
+.xp-bar-fill {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  background: linear-gradient(90deg, #646cff 0%, #535bf2 100%);
+  transition: width 0.3s ease;
+  box-shadow: 0 0 10px rgba(100, 108, 255, 0.5);
+}
+
+.xp-bar-text {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 0.85rem;
+  font-weight: bold;
+  color: white;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+  z-index: 1;
+}
+
+.dark-mode .xp-container {
+  background: rgba(100, 108, 255, 0.15);
+  border-color: rgba(100, 108, 255, 0.4);
+}
+
+.dark-mode .xp-level {
+  color: #8890ff;
+}
+
 .cookie-clicker {
   display: flex;
   flex-direction: column;
@@ -333,5 +403,26 @@
     width: 2.5rem;
     height: 2.5rem;
     font-size: 1.2rem;
+  }
+
+  .xp-container {
+    max-width: 100%;
+    padding: 0.75rem;
+  }
+
+  .xp-level {
+    font-size: 1rem;
+  }
+
+  .xp-multiplier {
+    font-size: 0.85rem;
+  }
+
+  .xp-bar-container {
+    height: 25px;
+  }
+
+  .xp-bar-text {
+    font-size: 0.75rem;
   }
 }
