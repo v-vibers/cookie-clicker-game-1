@@ -1,11 +1,13 @@
 Please implement the following feature request:
 
-**Feature Request:** Add a dark mode toggle and implement more options between the cookie farm and grandma
+**Feature Request:** Add a XP bar so whenever the user unlocks an upgrade it gets xp. They get a multiplier each level so level 1 gets a x0.1 multiplier and so on
+
+Level starts a 1 and needs 5 xp to get to the next. Level 2 needs 5xp + the amount of level one.
 
 **Project Context:**
 - Repository: v-vibers/cookie-clicker-game-1
-- Branch: feat/add-a-dark-mode-toggle-and-implement-mor
-- Base Branch: feat/initial-implementation
+- Branch: feat/add-a-xp-bar-so-whenever-the-user-unlock
+- Base Branch: feat/add-a-dark-mode-toggle-and-implement-mor
 - Requested by: paruiz01
 
 **CRITICAL - Read Project Instructions First:**
