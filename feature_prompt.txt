@@ -1,11 +1,11 @@
 Please implement the following feature request:
 
-**Feature Request:** On the right side of the page add a achievement list from getting cookie milestones. From 10 to 10,000,000 total baked. Make sure the menu is responsive and fits on the page. Just add a simple menu and once they complete the achievement it replaces to the next one. Each achievement makes the cookie clicker 0.5 better.
+**Feature Request:** Make it possible for the user to arrange the windows however they want. Add a tutorial as well showing the basic info about the app and what they can do
 
 **Project Context:**
 - Repository: v-vibers/cookie-clicker-game-1
-- Branch: feat/on-the-right-side-of-the-page-add-a-achi
-- Base Branch: feat/add-a-xp-bar-so-whenever-the-user-unlock
+- Branch: feat/make-it-possible-for-the-user-to-arrange
+- Base Branch: feat/on-the-right-side-of-the-page-add-a-achi
 - Requested by: paruiz01
 
 **CRITICAL - Read Project Instructions First:**

@@ -1,5 +1,7 @@
 import { useState, useEffect } from 'react'
 import './App.css'
+import DraggableWindow from './DraggableWindow'
+import Tutorial from './Tutorial'
 
 interface Upgrade {
   id: string
@@ -29,6 +31,10 @@ function App() {
     const saved = localStorage.getItem('darkMode')
     if (saved !== null) return saved === 'true'
     return window.matchMedia('(prefers-color-scheme: dark)').matches
+  })
+  const [windowMode, setWindowMode] = useState(() => {
+    const saved = localStorage.getItem('window-mode')
+    return saved !== null ? saved === 'true' : false
   })
   const [upgrades, setUpgrades] = useState<Upgrade[]>([
     { id: 'cursor', name: 'Cursor', baseCost: 15, cps: 0.1, count: 0, description: 'Autoclicks once every 10 seconds' },
@@ -99,6 +105,11 @@ function App() {
     localStorage.setItem('darkMode', String(darkMode))
   }, [darkMode])
 
+  // Save window mode preference
+  useEffect(() => {
+    localStorage.setItem('window-mode', String(windowMode))
+  }, [windowMode])
+
   // Calculate cookies per second with level multiplier
   useEffect(() => {
     const baseCps = upgrades.reduce((sum, upgrade) => sum + upgrade.cps * upgrade.count, 0)
@@ -154,7 +165,9 @@ function App() {
   }
 
   return (
-    <div className="game-container">
+    <div className={`game-container ${windowMode ? 'window-mode' : ''}`}>
+      <Tutorial />
+
       <button
         className="dark-mode-toggle"
         onClick={() => setDarkMode(!darkMode)}
@@ -164,7 +177,18 @@ function App() {
         {darkMode ? '☀️' : '🌙'}
       </button>
 
-      <div className="left-panel">
+      <button
+        className="window-mode-toggle"
+        onClick={() => setWindowMode(!windowMode)}
+        aria-label={windowMode ? 'Switch to fixed layout' : 'Switch to window mode'}
+        title={windowMode ? 'Fixed Layout' : 'Window Mode'}
+      >
+        {windowMode ? '📐' : '🪟'}
+      </button>
+
+      {!windowMode ? (
+        <>
+          <div className="left-panel">
         <div className="stats">
           <h1>🍪 Cookie Clicker</h1>
           <div className="cookie-count">
@@ -277,6 +301,137 @@ function App() {
           </div>
         </div>
       </div>
+        </>
+      ) : (
+        <>
+          {/* Window Mode Layout */}
+          <DraggableWindow
+            id="stats-panel"
+            title="🍪 Cookie Clicker"
+            defaultPosition={{ x: 20, y: 20 }}
+            defaultSize={{ width: 350, height: 650 }}
+          >
+            <div className="stats">
+              <div className="cookie-count">
+                <div className="count-number">{formatNumber(cookies)}</div>
+                <div className="count-label">cookies</div>
+              </div>
+              <div className="cps-display">
+                per second: <span className="cps-value">{cps.toFixed(1)}</span>
+              </div>
+              <div className="total-cookies">
+                Total baked: {formatNumber(totalCookies)}
+              </div>
+
+              {/* XP Bar */}
+              <div className="xp-container">
+                <div className="xp-header">
+                  <div className="xp-level">Level {level}</div>
+                  <div className="xp-multiplier">+{(getLevelMultiplier() * 100).toFixed(0)}% CPS</div>
+                </div>
+                <div className="xp-bar-container">
+                  <div
+                    className="xp-bar-fill"
+                    style={{ width: `${(xp / getXpNeededForLevel(level + 1)) * 100}%` }}
+                  />
+                  <div className="xp-bar-text">
+                    {xp} / {getXpNeededForLevel(level + 1)} XP
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="cookie-clicker">
+              <button
+                className="cookie-button"
+                onClick={handleCookieClick}
+                aria-label="Click cookie"
+              >
+                🍪
+              </button>
+              <div className="click-instruction">Click the cookie!</div>
+            </div>
+          </DraggableWindow>
+
+          <DraggableWindow
+            id="upgrades-panel"
+            title="Upgrades"
+            defaultPosition={{ x: 390, y: 20 }}
+            defaultSize={{ width: 400, height: 650 }}
+          >
+            <div className="upgrades-list">
+              {upgrades.map(upgrade => {
+                const cost = calculateUpgradeCost(upgrade)
+                const canAfford = cookies >= cost
+
+                return (
+                  <button
+                    key={upgrade.id}
+                    className={`upgrade-card ${canAfford ? 'affordable' : 'locked'}`}
+                    onClick={() => buyUpgrade(upgrade.id)}
+                    disabled={!canAfford}
+                  >
+                    <div className="upgrade-header">
+                      <div className="upgrade-name">{upgrade.name}</div>
+                      <div className="upgrade-count">{upgrade.count}</div>
+                    </div>
+                    <div className="upgrade-description">{upgrade.description}</div>
+                    <div className="upgrade-stats">
+                      <div className="upgrade-cps">+{upgrade.cps} CPS</div>
+                      <div className="upgrade-cost">{formatNumber(cost)} 🍪</div>
+                    </div>
+                  </button>
+                )
+              })}
+            </div>
+          </DraggableWindow>
+
+          <DraggableWindow
+            id="achievements-panel"
+            title="Achievements"
+            defaultPosition={{ x: 810, y: 20 }}
+            defaultSize={{ width: 350, height: 450 }}
+          >
+            <div className="achievements-list">
+              {getCurrentAchievement() && (
+                <div className="achievement-card active">
+                  <div className="achievement-icon">🏆</div>
+                  <div className="achievement-content">
+                    <div className="achievement-name">{getCurrentAchievement()!.name}</div>
+                    <div className="achievement-progress">
+                      <div className="achievement-progress-text">
+                        {formatNumber(totalCookies)} / {formatNumber(getCurrentAchievement()!.milestone)}
+                      </div>
+                      <div className="achievement-progress-bar">
+                        <div
+                          className="achievement-progress-fill"
+                          style={{
+                            width: `${Math.min(
+                              (totalCookies / getCurrentAchievement()!.milestone) * 100,
+                              100
+                            )}%`,
+                          }}
+                        />
+                      </div>
+                    </div>
+                    <div className="achievement-reward">+0.5 per click</div>
+                  </div>
+                </div>
+              )}
+              <div className="achievements-stats">
+                <div className="achievement-stat">
+                  <span className="stat-label">Completed:</span>
+                  <span className="stat-value">{achievements.filter(a => a.completed).length}/{achievements.length}</span>
+                </div>
+                <div className="achievement-stat">
+                  <span className="stat-label">Click Power:</span>
+                  <span className="stat-value">{getClickBonus().toFixed(1)}x</span>
+                </div>
+              </div>
+            </div>
+          </DraggableWindow>
+        </>
+      )}
     </div>
   )
 }
